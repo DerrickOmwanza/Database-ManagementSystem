@@ -1,0 +1,81 @@
+<%- include('../partials/layoutStart', { title, bodyClass: 'app-page', pageHeading, pageDescription, currentPath, currentUser, success, error }) %>
+
+<section class="panel-card">
+  <div class="panel-heading">
+    <h2>Registration Form</h2>
+    <p class="panel-caption">Registration fee applied automatically: KSh <%= registrationFee.toLocaleString() %></p>
+  </div>
+
+  <form action="/institutions" method="post" class="form-grid">
+    <div class="form-field">
+      <label for="name">Institution Name <span class="required-mark">*</span></label>
+      <input id="name" name="name" type="text" class="form-input" required>
+    </div>
+    <div class="form-field">
+      <label for="postalAddress">Physical Address</label>
+      <input id="postalAddress" name="postalAddress" type="text" class="form-input">
+    </div>
+    <div class="form-field">
+      <label for="town">Town <span class="required-mark">*</span></label>
+      <input id="town" name="town" type="text" class="form-input" required>
+    </div>
+    <div class="form-field">
+      <label for="county">County <span class="required-mark">*</span></label>
+      <input id="county" name="county" type="text" class="form-input" required>
+    </div>
+    <div class="form-field">
+      <label for="institutionType">Institution Type <span class="required-mark">*</span></label>
+      <select id="institutionType" name="institutionType" class="form-input" required>
+        <option value="">Select institution type</option>
+        <% institutionTypes.forEach((type) => { %>
+          <option value="<%= type %>"><%= type %></option>
+        <% }); %>
+      </select>
+    </div>
+    <div class="form-field">
+      <label for="bandwidthPackageId">Bandwidth Package <span class="required-mark">*</span></label>
+      <select id="bandwidthPackageId" name="bandwidthPackageId" class="form-input" required>
+        <option value="">Select bandwidth package</option>
+        <% bandwidthPackages.forEach((pkg) => { %>
+          <option value="<%= pkg.id %>" data-monthly-cost="<%= Number(pkg.monthly_cost) %>">
+            <%= pkg.speed_label %> - KSh <%= Number(pkg.monthly_cost).toLocaleString() %>
+          </option>
+        <% }); %>
+      </select>
+    </div>
+    <div class="form-field">
+      <label for="contactName">Contact Person Name <span class="required-mark">*</span></label>
+      <input id="contactName" name="contactName" type="text" class="form-input" required>
+    </div>
+    <div class="form-field">
+      <label for="contactPhone">Phone Number <span class="required-mark">*</span></label>
+      <input id="contactPhone" name="contactPhone" type="text" class="form-input" required>
+    </div>
+    <div class="form-field">
+      <label for="contactEmail">Email Address</label>
+      <input id="contactEmail" name="contactEmail" type="email" class="form-input">
+    </div>
+    <div class="form-field form-field-wide">
+      <label for="monthlyFeePreview">Monthly Fee</label>
+      <input id="monthlyFeePreview" type="text" class="form-input" value="Select a package to preview pricing" readonly>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Save Institution</button>
+      <a href="/institutions" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</section>
+
+<script>
+  const packageSelect = document.getElementById('bandwidthPackageId');
+  const monthlyPreview = document.getElementById('monthlyFeePreview');
+  if (packageSelect && monthlyPreview) {
+    packageSelect.addEventListener('change', () => {
+      const selected = packageSelect.options[packageSelect.selectedIndex];
+      const cost = selected.getAttribute('data-monthly-cost');
+      monthlyPreview.value = cost ? `KSh ${Number(cost).toLocaleString()}` : 'Select a package to preview pricing';
+    });
+  }
+</script>
+
+<%- include('../partials/layoutEnd') %>

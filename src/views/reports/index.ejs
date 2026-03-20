@@ -1,0 +1,203 @@
+<%- include('../partials/layoutStart', { title, bodyClass: 'app-page', pageHeading, pageDescription, currentPath, currentUser, success, error }) %>
+
+<section class="panel-card">
+  <div class="toolbar">
+    <div class="toolbar-actions">
+      <select class="form-input" data-report-selector>
+        <option value="all">All Reports</option>
+        <option value="registered">Registered Institutions</option>
+        <option value="defaulters">Defaulters</option>
+        <option value="disconnections">Disconnections</option>
+        <option value="infrastructure">Infrastructure</option>
+        <option value="upgrades">Upgrade History</option>
+      </select>
+      <button type="button" class="btn btn-outline" data-print-page>Print Current View</button>
+    </div>
+    <input type="search" class="form-input" placeholder="Search visible report table" data-table-filter=".data-table">
+  </div>
+</section>
+
+<section class="panel-card" data-report-section="registered">
+  <div class="panel-heading"><h2>Registered Institutions</h2></div>
+  <% if (!registeredInstitutions.length) { %>
+    <div class="empty-box">
+      <p class="empty-state">No institution records found.</p>
+    </div>
+  <% } else { %>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Town</th>
+            <th>Contact</th>
+            <th>Bandwidth</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% registeredInstitutions.forEach((item) => { %>
+            <tr>
+              <td><%= item.name %></td>
+              <td><%= item.institution_type %></td>
+              <td><%= item.town %></td>
+              <td><%= item.contact_name || '-' %></td>
+              <td><%= item.speed_label %></td>
+              <td><span class="status-pill"><%= item.status %></span></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>
+
+<section class="panel-card" data-report-section="defaulters">
+  <div class="panel-heading"><h2>Defaulters</h2></div>
+  <% if (!defaulters.length) { %>
+    <div class="empty-box">
+      <p class="empty-state">No defaulter records found for the selected period.</p>
+    </div>
+  <% } else { %>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Institution</th>
+            <th>Outstanding</th>
+            <th>Fine</th>
+            <th>Total Due</th>
+            <th>Due Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% defaulters.forEach((item) => { %>
+            <tr>
+              <td><%= item.institution_name %></td>
+              <td>KSh <%= Number(item.outstanding_amount).toLocaleString() %></td>
+              <td>KSh <%= Number(item.fine_amount).toLocaleString() %></td>
+              <td>KSh <%= Number(item.total_due).toLocaleString() %></td>
+              <td><%= new Date(item.due_date).toISOString().slice(0, 10) %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>
+
+<section class="panel-card" data-report-section="disconnections">
+  <div class="panel-heading"><h2>Disconnections</h2></div>
+  <% if (!disconnections.length) { %>
+    <div class="empty-box">
+      <p class="empty-state">No disconnection records found.</p>
+    </div>
+  <% } else { %>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Institution</th>
+            <th>Reason</th>
+            <th>Outstanding</th>
+            <th>Fine</th>
+            <th>Reconnection Fee</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% disconnections.forEach((item) => { %>
+            <tr>
+              <td><%= item.institution_name %></td>
+              <td><%= item.reason %></td>
+              <td>KSh <%= Number(item.outstanding_balance).toLocaleString() %></td>
+              <td>KSh <%= Number(item.fine_amount).toLocaleString() %></td>
+              <td>KSh <%= Number(item.reconnection_fee).toLocaleString() %></td>
+              <td><span class="status-pill"><%= item.status %></span></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>
+
+<section class="panel-card" data-report-section="infrastructure">
+  <div class="panel-heading"><h2>Infrastructure Report</h2></div>
+  <% if (!infrastructureRecords.length) { %>
+    <div class="empty-box">
+      <p class="empty-state">No infrastructure records found.</p>
+    </div>
+  <% } else { %>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Institution</th>
+            <th>PCs</th>
+            <th>LAN Nodes</th>
+            <th>Total Cost</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% infrastructureRecords.forEach((item) => { %>
+            <tr>
+              <td><%= item.institution_name %></td>
+              <td><%= item.pcs_purchased %></td>
+              <td><%= item.lan_nodes %></td>
+              <td>KSh <%= Number(item.total_cost).toLocaleString() %></td>
+              <td><span class="status-pill"><%= item.installation_status %></span></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>
+
+<section class="stats-grid">
+  <article class="stat-card stat-primary"><p class="stat-label">Registration Fees</p><h2 class="stat-value">KSh <%= overallFinancialTotals.registrationTotal.toLocaleString() %></h2></article>
+  <article class="stat-card stat-info"><p class="stat-label">Installation Fees</p><h2 class="stat-value">KSh <%= overallFinancialTotals.installationTotal.toLocaleString() %></h2></article>
+  <article class="stat-card stat-success"><p class="stat-label">Monthly Payments</p><h2 class="stat-value">KSh <%= overallFinancialTotals.monthlyTotal.toLocaleString() %></h2></article>
+  <article class="stat-card stat-warning"><p class="stat-label">Fines</p><h2 class="stat-value">KSh <%= overallFinancialTotals.fineTotal.toLocaleString() %></h2></article>
+  <article class="stat-card stat-danger"><p class="stat-label">Reconnections</p><h2 class="stat-value">KSh <%= overallFinancialTotals.reconnectionTotal.toLocaleString() %></h2></article>
+  <article class="stat-card stat-primary"><p class="stat-label">Grand Total Paid</p><h2 class="stat-value">KSh <%= overallFinancialTotals.paidTotal.toLocaleString() %></h2></article>
+</section>
+
+<section class="panel-card" data-report-section="upgrades">
+  <div class="panel-heading"><h2>Upgrade History</h2></div>
+  <% if (!upgradeHistory.length) { %>
+    <div class="empty-box">
+      <p class="empty-state">No upgrade records found.</p>
+    </div>
+  <% } else { %>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Institution</th>
+            <th>Old Package</th>
+            <th>New Package</th>
+            <th>Discounted Cost</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% upgradeHistory.forEach((item) => { %>
+            <tr>
+              <td><%= item.institution_name %></td>
+              <td><%= item.old_speed_label %></td>
+              <td><%= item.new_speed_label %></td>
+              <td>KSh <%= Number(item.discounted_monthly_cost).toLocaleString() %></td>
+              <td><%= new Date(item.upgrade_date).toISOString().slice(0, 10) %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>
+
+<%- include('../partials/layoutEnd') %>

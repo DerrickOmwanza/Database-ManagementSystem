@@ -131,3 +131,4 @@ The password is stored as a hashed value by the seed script.
 
 Core documentation is in [`docs/`](c:/Users/ADMIN/Desktop/XAMPP%202025/htdocs/ISP-DatabaseManagement-System/docs), with the implementation baseline in [docs/ImplementationBaseline.md](c:/Users/ADMIN/Desktop/XAMPP%202025/htdocs/ISP-DatabaseManagement-System/docs/ImplementationBaseline.md).
 # Database-ManagementSystem
+# Database-ManagementSystem

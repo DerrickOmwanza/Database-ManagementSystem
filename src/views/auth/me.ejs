@@ -1,0 +1,25 @@
+<%- include('../partials/layoutStart', { title, bodyClass: 'app-page', pageHeading, pageDescription, currentPath, currentUser, success, error }) %>
+
+<section class="single-column-grid">
+  <article class="panel-card narrow-panel">
+    <div class="panel-heading">
+      <h2>Current Session</h2>
+    </div>
+    <dl class="detail-list">
+      <div class="detail-row">
+        <dt>Username</dt>
+        <dd><%= user.username %></dd>
+      </div>
+      <div class="detail-row">
+        <dt>Full Name</dt>
+        <dd><%= user.fullName %></dd>
+      </div>
+      <div class="detail-row">
+        <dt>Role</dt>
+        <dd><%= user.role %></dd>
+      </div>
+    </dl>
+  </article>
+</section>
+
+<%- include('../partials/layoutEnd') %>

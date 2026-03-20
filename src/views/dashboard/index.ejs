@@ -1,0 +1,82 @@
+<%- include('../partials/layoutStart', { title, bodyClass: 'app-page', pageHeading, pageDescription, currentPath, currentUser, success, error }) %>
+
+<section class="stats-grid">
+  <article class="stat-card stat-primary">
+    <p class="stat-label">Total Institutions</p>
+    <h2 class="stat-value"><%= totalInstitutions %></h2>
+  </article>
+  <article class="stat-card stat-success">
+    <p class="stat-label">Active Connections</p>
+    <h2 class="stat-value"><%= activeInstitutions %></h2>
+  </article>
+  <article class="stat-card stat-warning">
+    <p class="stat-label">Pending Payments</p>
+    <h2 class="stat-value"><%= pendingPayments %></h2>
+  </article>
+  <article class="stat-card stat-danger">
+    <p class="stat-label">Disconnected</p>
+    <h2 class="stat-value"><%= disconnectedInstitutions %></h2>
+  </article>
+</section>
+
+<section class="content-grid">
+  <article class="panel-card">
+    <div class="panel-heading">
+      <h2>Recent Activity</h2>
+    </div>
+    <% if (!recentActivity.length) { %>
+      <p class="empty-state">No recent activity yet.</p>
+    <% } else { %>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Institution</th>
+              <th>Type</th>
+              <th>Detail</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% recentActivity.forEach((activity) => { %>
+              <tr>
+                <td><%= new Date(activity.activity_date).toISOString().slice(0, 10) %></td>
+                <td><%= activity.institution_name %></td>
+                <td><%= activity.activity_type %></td>
+                <td><%= activity.detail %></td>
+                <td><span class="status-pill"><%= activity.status %></span></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </article>
+
+  <article class="panel-card">
+    <div class="panel-heading">
+      <h2>Quick Actions</h2>
+    </div>
+    <div class="action-list">
+      <a class="action-tile" href="/institutions/new">
+        <strong>Register Institution</strong>
+        <span>Create a new client institution and contact record.</span>
+      </a>
+      <a class="action-tile" href="/payments">
+        <strong>Capture Billing</strong>
+        <span>Generate charges, settle monthly payments, and process reconnections.</span>
+      </a>
+      <a class="action-tile" href="/infrastructure">
+        <strong>Manage Infrastructure</strong>
+        <span>Track PCs, LAN nodes, installation progress, and total cost.</span>
+      </a>
+      <a class="action-tile" href="/reports">
+        <strong>Generate Reports</strong>
+        <span>Review operational, financial, and upgrade performance.</span>
+      </a>
+    </div>
+  </article>
+</section>
+
+<%- include('../partials/layoutEnd') %>

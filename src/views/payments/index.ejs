@@ -1,0 +1,159 @@
+<%- include('../partials/layoutStart', { title, bodyClass: 'app-page', pageHeading, pageDescription, currentPath, currentUser, success, error }) %>
+
+<section class="content-grid">
+  <article class="panel-card">
+    <div class="panel-heading">
+      <h2>Generate Monthly Charge</h2>
+    </div>
+    <form action="/payments/monthly-charges" method="post" class="form-grid">
+      <div class="form-field form-field-wide">
+        <label for="chargeInstitutionId">Institution</label>
+        <select id="chargeInstitutionId" name="institutionId" class="form-input" required>
+          <option value="">Select institution</option>
+          <% institutions.forEach((institution) => { %>
+            <option value="<%= institution.id %>">
+              <%= institution.name %> - <%= institution.speed_label %> - KSh <%= Number(institution.monthly_cost).toLocaleString() %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="billingMonth">Billing Month</label>
+        <input id="billingMonth" name="billingMonth" type="number" min="1" max="12" class="form-input" required>
+      </div>
+      <div class="form-field">
+        <label for="billingYear">Billing Year</label>
+        <input id="billingYear" name="billingYear" type="number" min="2020" max="2100" class="form-input" required>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Generate Charge</button>
+      </div>
+    </form>
+  </article>
+
+  <article class="panel-card">
+    <div class="panel-heading">
+      <h2>Settle Monthly Charge</h2>
+      <p class="panel-caption">Late payment fine: <%= latePaymentRatePercent %>%</p>
+    </div>
+    <form action="/payments/settlements" method="post" class="form-grid">
+      <div class="form-field form-field-wide">
+        <label for="paymentId">Pending Charge</label>
+        <select id="paymentId" name="paymentId" class="form-input" required>
+          <option value="">Select pending charge</option>
+          <% pendingCharges.forEach((charge) => { %>
+            <option value="<%= charge.id %>">
+              <%= charge.institution_name %> - <%= charge.billing_month %>/<%= charge.billing_year %> - KSh <%= Number(charge.amount).toLocaleString() %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="paymentDate">Payment Date</label>
+        <input id="paymentDate" name="paymentDate" type="date" class="form-input" required>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Settle Charge</button>
+      </div>
+    </form>
+  </article>
+</section>
+
+<section class="content-grid">
+  <article class="panel-card">
+    <div class="panel-heading">
+      <h2>Record Installation Payment</h2>
+      <p class="panel-caption">Default installation fee: KSh <%= installationFee.toLocaleString() %></p>
+    </div>
+    <form action="/payments/installations" method="post" class="form-grid">
+      <div class="form-field form-field-wide">
+        <label for="installationInstitutionId">Institution</label>
+        <select id="installationInstitutionId" name="institutionId" class="form-input" required>
+          <option value="">Select institution</option>
+          <% institutions.forEach((institution) => { %>
+            <option value="<%= institution.id %>"><%= institution.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="installationAmount">Amount</label>
+        <input id="installationAmount" name="amount" type="number" min="1" step="0.01" value="<%= installationFee %>" class="form-input" required>
+      </div>
+      <div class="form-field">
+        <label for="installationDate">Payment Date</label>
+        <input id="installationDate" name="paymentDate" type="date" class="form-input" required>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Record Installation Payment</button>
+      </div>
+    </form>
+  </article>
+
+  <article class="panel-card">
+    <div class="panel-heading">
+      <h2>Process Reconnection</h2>
+      <p class="panel-caption">Reconnection fee: KSh <%= reconnectionFee.toLocaleString() %></p>
+    </div>
+    <form action="/payments/reconnections" method="post" class="form-grid">
+      <div class="form-field form-field-wide">
+        <label for="reconnectionInstitutionId">Institution</label>
+        <select id="reconnectionInstitutionId" name="institutionId" class="form-input" required>
+          <option value="">Select institution</option>
+          <% institutions.forEach((institution) => { %>
+            <option value="<%= institution.id %>"><%= institution.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="reconnectionDate">Payment Date</label>
+        <input id="reconnectionDate" name="paymentDate" type="date" class="form-input" required>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Process Reconnection</button>
+      </div>
+    </form>
+  </article>
+</section>
+
+<section class="panel-card">
+  <div class="panel-heading">
+    <h2>Payment History</h2>
+  </div>
+  <% if (!payments.length) { %>
+    <div class="empty-box">
+      <p class="empty-state">No payment records yet.</p>
+    </div>
+  <% } else { %>
+    <div class="toolbar">
+      <input type="search" class="form-input" placeholder="Search payment history" data-table-filter="#payments-table">
+    </div>
+    <div class="table-wrap">
+      <table class="data-table" id="payments-table">
+        <thead>
+          <tr>
+            <th>Institution</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Payment Date</th>
+            <th>Billing Period</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% payments.forEach((payment) => { %>
+            <tr>
+              <td><%= payment.institution_name %></td>
+              <td><%= payment.payment_type %></td>
+              <td>KSh <%= Number(payment.amount).toLocaleString() %></td>
+              <td><span class="status-pill"><%= payment.status %></span></td>
+              <td><%= payment.payment_date ? new Date(payment.payment_date).toISOString().slice(0, 10) : '-' %></td>
+              <td><%= payment.billing_month && payment.billing_year ? `${payment.billing_month}/${payment.billing_year}` : '-' %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>
+
+<%- include('../partials/layoutEnd') %>

@@ -1,0 +1,27 @@
+<%- include('../partials/head', { title, bodyClass: 'auth-page' }) %>
+
+<main class="auth-card">
+  <h1>Azani ISP Login</h1>
+  <p>Use your system credentials to access the dashboard and operational modules.</p>
+
+  <% if (error && error.length) { %>
+    <div class="flash flash-error" role="alert"><%= error[0] %></div>
+  <% } %>
+
+  <form action="/auth/login" method="post" class="form-grid">
+    <div class="form-field form-field-wide">
+      <label for="username">Username <span class="required-mark">*</span></label>
+      <input id="username" name="username" type="text" class="form-input" required>
+    </div>
+    <div class="form-field form-field-wide">
+      <label for="password">Password <span class="required-mark">*</span></label>
+      <input id="password" name="password" type="password" class="form-input" required>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Log In</button>
+    </div>
+  </form>
+</main>
+
+</body>
+</html>

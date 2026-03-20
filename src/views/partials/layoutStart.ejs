@@ -1,0 +1,73 @@
+<%- include('head', { title, bodyClass }) %>
+
+<div class="app-shell">
+  <header class="topbar">
+    <button
+      type="button"
+      class="nav-toggle"
+      data-nav-toggle
+      aria-expanded="false"
+      aria-controls="primary-sidebar"
+      aria-label="Open navigation menu"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="brand-block">
+      <a href="/" class="brand-mark">Azani ISP</a>
+      <span class="brand-subtitle">Information System</span>
+    </div>
+    <div class="topbar-search">
+      <input type="search" class="search-input" placeholder="Search pages and reports" aria-label="Search">
+    </div>
+    <div class="topbar-user">
+      <% if (currentUser) { %>
+        <span class="user-name"><%= currentUser.fullName %></span>
+        <span class="user-role"><%= currentUser.role %></span>
+      <% } else { %>
+        <span class="user-role">Guest</span>
+      <% } %>
+    </div>
+  </header>
+
+  <aside class="sidebar" id="primary-sidebar" data-sidebar>
+    <div class="sidebar-header">
+      <strong>Navigation</strong>
+      <button type="button" class="sidebar-close" data-nav-close aria-label="Close navigation menu">Close</button>
+    </div>
+    <nav class="sidebar-nav" aria-label="Primary">
+      <a class="sidebar-link <%= currentPath === '/' ? 'is-active' : '' %>" href="/">Dashboard</a>
+      <a class="sidebar-link <%= currentPath.startsWith('/institutions') ? 'is-active' : '' %>" href="/institutions">Registration</a>
+      <a class="sidebar-link <%= currentPath.startsWith('/payments') ? 'is-active' : '' %>" href="/payments">Payments</a>
+      <a class="sidebar-link <%= currentPath.startsWith('/infrastructure') ? 'is-active' : '' %>" href="/infrastructure">Infrastructure</a>
+      <a class="sidebar-link <%= currentPath.startsWith('/upgrades') ? 'is-active' : '' %>" href="/upgrades">Services</a>
+      <a class="sidebar-link <%= currentPath.startsWith('/reports') ? 'is-active' : '' %>" href="/reports">Reports</a>
+      <a class="sidebar-link <%= currentPath.startsWith('/auth/me') ? 'is-active' : '' %>" href="/auth/me">My Account</a>
+    </nav>
+  </aside>
+
+  <button type="button" class="sidebar-backdrop" data-nav-backdrop aria-hidden="true" tabindex="-1"></button>
+
+  <main class="content-area">
+    <section class="page-header">
+      <div>
+        <p class="breadcrumbs">Home<% if (currentPath !== '/') { %> / <%= title %><% } %></p>
+        <h1 class="page-title"><%= typeof pageHeading !== 'undefined' ? pageHeading : title %></h1>
+        <% if (typeof pageDescription !== 'undefined' && pageDescription) { %>
+          <p class="page-description"><%= pageDescription %></p>
+        <% } %>
+      </div>
+      <% if (currentUser) { %>
+        <form action="/auth/logout" method="post">
+          <button type="submit" class="btn btn-outline">Log Out</button>
+        </form>
+      <% } %>
+    </section>
+
+    <% if (success && success.length) { %>
+      <div class="flash flash-success" role="status"><%= success[0] %></div>
+    <% } %>
+    <% if (error && error.length) { %>
+      <div class="flash flash-error" role="alert"><%= error[0] %></div>
+    <% } %>

@@ -1,0 +1,87 @@
+<%- include('../partials/layoutStart', { title, bodyClass: 'app-page', pageHeading, pageDescription, currentPath, currentUser, success, error }) %>
+
+<section class="content-grid">
+  <article class="panel-card">
+    <div class="panel-heading">
+      <h2>Upgrade Service</h2>
+      <p class="panel-caption">Upgrade discount: <%= discountPercent %>%</p>
+    </div>
+
+    <form action="/upgrades" method="post" class="form-grid">
+      <div class="form-field form-field-wide">
+        <label for="institutionId">Institution</label>
+        <select id="institutionId" name="institutionId" class="form-input" required>
+          <option value="">Select institution</option>
+          <% institutions.forEach((institution) => { %>
+            <option value="<%= institution.id %>">
+              <%= institution.name %> - Current: <%= institution.speed_label %> - KSh <%= Number(institution.monthly_cost).toLocaleString() %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-field form-field-wide">
+        <label for="newPackageId">New Package</label>
+        <select id="newPackageId" name="newPackageId" class="form-input" required>
+          <option value="">Select new package</option>
+          <% bandwidthPackages.forEach((pkg) => { %>
+            <option value="<%= pkg.id %>">
+              <%= pkg.speed_label %> - KSh <%= Number(pkg.monthly_cost).toLocaleString() %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="upgradeDate">Upgrade Date</label>
+        <input id="upgradeDate" name="upgradeDate" type="date" class="form-input">
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Process Upgrade</button>
+      </div>
+    </form>
+  </article>
+
+  <article class="panel-card">
+    <div class="panel-heading">
+      <h2>Upgrade History</h2>
+    </div>
+    <% if (!upgrades.length) { %>
+      <div class="empty-box">
+        <p class="empty-state">No upgrade records yet.</p>
+      </div>
+    <% } else { %>
+      <div class="toolbar">
+        <input type="search" class="form-input" placeholder="Search upgrade history" data-table-filter="#upgrades-table">
+      </div>
+      <div class="table-wrap">
+        <table class="data-table" id="upgrades-table">
+          <thead>
+            <tr>
+              <th>Institution</th>
+              <th>Old Package</th>
+              <th>New Package</th>
+              <th>Old Cost</th>
+              <th>New Cost</th>
+              <th>Discounted Cost</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% upgrades.forEach((upgrade) => { %>
+              <tr>
+                <td><%= upgrade.institution_name %></td>
+                <td><%= upgrade.old_speed_label %></td>
+                <td><%= upgrade.new_speed_label %></td>
+                <td>KSh <%= Number(upgrade.old_monthly_cost).toLocaleString() %></td>
+                <td>KSh <%= Number(upgrade.new_monthly_cost).toLocaleString() %></td>
+                <td>KSh <%= Number(upgrade.discounted_monthly_cost).toLocaleString() %></td>
+                <td><%= new Date(upgrade.upgrade_date).toISOString().slice(0, 10) %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </article>
+</section>
+
+<%- include('../partials/layoutEnd') %>

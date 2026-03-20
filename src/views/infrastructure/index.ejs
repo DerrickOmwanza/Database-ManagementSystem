@@ -1,0 +1,117 @@
+<%- include('../partials/layoutStart', { title, bodyClass: 'app-page', pageHeading, pageDescription, currentPath, currentUser, success, error }) %>
+
+<section class="content-grid">
+  <article class="panel-card">
+    <div class="panel-heading">
+      <h2>Add or Update Infrastructure</h2>
+      <p class="panel-caption">PC unit cost: KSh <%= pcUnitCost.toLocaleString() %> | Installation fee on completion: KSh <%= installationFee.toLocaleString() %></p>
+    </div>
+
+    <form action="/infrastructure" method="post" class="form-grid">
+      <div class="form-field form-field-wide">
+        <label for="institutionId">Institution <span class="required-mark">*</span></label>
+        <select id="institutionId" name="institutionId" class="form-input" required>
+          <option value="">Select institution</option>
+          <% institutions.forEach((institution) => { %>
+            <option value="<%= institution.id %>"><%= institution.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="pcsPurchased">PCs Purchased <span class="required-mark">*</span></label>
+        <input id="pcsPurchased" name="pcsPurchased" type="number" min="0" value="0" class="form-input" required>
+      </div>
+      <div class="form-field">
+        <label for="lanNodes">LAN Nodes <span class="required-mark">*</span></label>
+        <input id="lanNodes" name="lanNodes" type="number" min="0" max="100" value="0" class="form-input" required>
+      </div>
+      <div class="form-field">
+        <label for="installationStatus">Installation Status <span class="required-mark">*</span></label>
+        <select id="installationStatus" name="installationStatus" class="form-input" required>
+          <option value="Pending">Pending</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
+          <option value="Not Eligible">Not Eligible</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="installationDate">Installation Date</label>
+        <input id="installationDate" name="installationDate" type="date" class="form-input">
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save Infrastructure</button>
+      </div>
+    </form>
+  </article>
+
+  <article class="panel-card">
+    <div class="panel-heading">
+      <h2>LAN Pricing Tiers</h2>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Nodes</th>
+            <th>Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% lanPricingTiers.forEach((tier) => { %>
+            <tr>
+              <td><%= tier.min_nodes %> - <%= tier.max_nodes %></td>
+              <td>KSh <%= Number(tier.cost).toLocaleString() %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>
+
+<section class="panel-card">
+  <div class="panel-heading">
+    <h2>Infrastructure Records</h2>
+  </div>
+  <% if (!records.length) { %>
+    <div class="empty-box">
+      <p class="empty-state">No infrastructure records yet.</p>
+    </div>
+  <% } else { %>
+    <div class="toolbar">
+      <input type="search" class="form-input" placeholder="Search infrastructure records" data-table-filter="#infrastructure-table">
+    </div>
+    <div class="table-wrap">
+      <table class="data-table" id="infrastructure-table">
+        <thead>
+          <tr>
+            <th>Institution</th>
+            <th>PCs</th>
+            <th>PC Cost</th>
+            <th>LAN Nodes</th>
+            <th>LAN Cost</th>
+            <th>Installation Fee</th>
+            <th>Total</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% records.forEach((record) => { %>
+            <tr>
+              <td><%= record.institution_name %></td>
+              <td><%= record.pcs_purchased %></td>
+              <td>KSh <%= Number(record.pcs_cost).toLocaleString() %></td>
+              <td><%= record.lan_nodes %></td>
+              <td>KSh <%= Number(record.lan_cost).toLocaleString() %></td>
+              <td>KSh <%= Number(record.installation_fee).toLocaleString() %></td>
+              <td>KSh <%= Number(record.total_cost).toLocaleString() %></td>
+              <td><span class="status-pill"><%= record.installation_status %></span></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>
+
+<%- include('../partials/layoutEnd') %>

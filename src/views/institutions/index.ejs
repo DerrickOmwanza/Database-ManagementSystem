@@ -1,0 +1,50 @@
+<%- include('../partials/layoutStart', { title, bodyClass: 'app-page', pageHeading, pageDescription, currentPath, currentUser, success, error }) %>
+
+<section class="panel-card">
+  <div class="panel-heading panel-heading-inline">
+    <h2>Institution Register</h2>
+    <a class="btn btn-primary" href="/institutions/new">Register New Institution</a>
+  </div>
+
+  <% if (!institutions.length) { %>
+    <div class="empty-box">
+      <p class="empty-state">No institutions registered yet.</p>
+    </div>
+  <% } else { %>
+    <div class="toolbar">
+      <input type="search" class="form-input" placeholder="Search institutions" data-table-filter="#institutions-table">
+    </div>
+    <div class="table-wrap">
+      <table class="data-table" id="institutions-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Town</th>
+            <th>County</th>
+            <th>Contact</th>
+            <th>Phone</th>
+            <th>Bandwidth</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% institutions.forEach((institution) => { %>
+            <tr>
+              <td><%= institution.name %></td>
+              <td><%= institution.institution_type %></td>
+              <td><%= institution.town %></td>
+              <td><%= institution.county %></td>
+              <td><%= institution.contact_name || '-' %></td>
+              <td><%= institution.contact_phone || '-' %></td>
+              <td><%= institution.speed_label %></td>
+              <td><span class="status-pill"><%= institution.status %></span></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>
+
+<%- include('../partials/layoutEnd') %>
