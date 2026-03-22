@@ -313,6 +313,15 @@ select {
   margin-bottom: 24px;
 }
 
+/* Form takes remaining space; aside card (e.g. LAN tiers) sizes to content */
+.content-grid--form-aside {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.content-grid--form-aside > :last-child {
+  width: min(260px, 100%);
+}
+
 .single-column-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -701,6 +710,8 @@ select.form-input {
   .content-area { padding: 20px 16px; }
 
   .content-grid { grid-template-columns: 1fr; }
+  .content-grid--form-aside { grid-template-columns: 1fr; }
+  .content-grid--form-aside > :last-child { width: 100%; }
 
   .form-grid { grid-template-columns: 1fr; }
 
