@@ -12,6 +12,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .codebuddy
+reset-admin.js
 
 # OpenMemory - IDE/Assistant specific rules
 .cursor\rules\openmemory.mdc

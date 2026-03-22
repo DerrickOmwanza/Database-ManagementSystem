@@ -13,7 +13,6 @@ async function seedAdminUser(connection) {
     `INSERT INTO system_users (username, password_hash, full_name, role, status)
      VALUES (?, ?, ?, 'Admin', 'Active')
      ON DUPLICATE KEY UPDATE
-       password_hash = VALUES(password_hash),
        full_name = VALUES(full_name),
        role = VALUES(role),
        status = VALUES(status),
