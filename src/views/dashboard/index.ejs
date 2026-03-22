@@ -41,11 +41,11 @@
           <tbody>
             <% recentActivity.forEach((activity) => { %>
               <tr>
-                <td><%= new Date(activity.activity_date).toISOString().slice(0, 10) %></td>
-                <td><%= activity.institution_name %></td>
-                <td><%= activity.activity_type %></td>
-                <td><%= activity.detail %></td>
-                <td><span class="status-pill"><%= activity.status %></span></td>
+                <td data-label="Date"><%= new Date(activity.activity_date).toISOString().slice(0, 10) %></td>
+                <td data-label="Institution"><%= activity.institution_name %></td>
+                <td data-label="Type"><%= activity.activity_type %></td>
+                <td data-label="Detail"><%= activity.detail %></td>
+                <td data-label="Status"><span class="status-pill"><%= activity.status %></span></td>
               </tr>
             <% }) %>
           </tbody>

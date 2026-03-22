@@ -24,7 +24,7 @@
       <p class="empty-state">No institution records found.</p>
     </div>
   <% } else { %>
-    <div class="table-wrap">
+    <div class="table-wrap table-wrap--tall">
       <table class="data-table">
         <thead>
           <tr>
@@ -39,12 +39,12 @@
         <tbody>
           <% registeredInstitutions.forEach((item) => { %>
             <tr>
-              <td><%= item.name %></td>
-              <td><%= item.institution_type %></td>
-              <td><%= item.town %></td>
-              <td><%= item.contact_name || '-' %></td>
-              <td><%= item.speed_label %></td>
-              <td><span class="status-pill"><%= item.status %></span></td>
+              <td data-label="Name"><%= item.name %></td>
+              <td data-label="Type"><%= item.institution_type %></td>
+              <td data-label="Town"><%= item.town %></td>
+              <td data-label="Contact"><%= item.contact_name || '-' %></td>
+              <td data-label="Bandwidth"><%= item.speed_label %></td>
+              <td data-label="Status"><span class="status-pill"><%= item.status %></span></td>
             </tr>
           <% }) %>
         </tbody>
@@ -60,7 +60,7 @@
       <p class="empty-state">No defaulter records found for the selected period.</p>
     </div>
   <% } else { %>
-    <div class="table-wrap">
+    <div class="table-wrap table-wrap--tall">
       <table class="data-table">
         <thead>
           <tr>
@@ -74,11 +74,11 @@
         <tbody>
           <% defaulters.forEach((item) => { %>
             <tr>
-              <td><%= item.institution_name %></td>
-              <td>KSh <%= Number(item.outstanding_amount).toLocaleString() %></td>
-              <td>KSh <%= Number(item.fine_amount).toLocaleString() %></td>
-              <td>KSh <%= Number(item.total_due).toLocaleString() %></td>
-              <td><%= new Date(item.due_date).toISOString().slice(0, 10) %></td>
+              <td data-label="Institution"><%= item.institution_name %></td>
+              <td data-label="Outstanding">KSh <%= Number(item.outstanding_amount).toLocaleString() %></td>
+              <td data-label="Fine">KSh <%= Number(item.fine_amount).toLocaleString() %></td>
+              <td data-label="Total Due">KSh <%= Number(item.total_due).toLocaleString() %></td>
+              <td data-label="Due Date"><%= new Date(item.due_date).toISOString().slice(0, 10) %></td>
             </tr>
           <% }) %>
         </tbody>
@@ -94,7 +94,7 @@
       <p class="empty-state">No disconnection records found.</p>
     </div>
   <% } else { %>
-    <div class="table-wrap">
+    <div class="table-wrap table-wrap--tall">
       <table class="data-table">
         <thead>
           <tr>
@@ -109,12 +109,12 @@
         <tbody>
           <% disconnections.forEach((item) => { %>
             <tr>
-              <td><%= item.institution_name %></td>
-              <td><%= item.reason %></td>
-              <td>KSh <%= Number(item.outstanding_balance).toLocaleString() %></td>
-              <td>KSh <%= Number(item.fine_amount).toLocaleString() %></td>
-              <td>KSh <%= Number(item.reconnection_fee).toLocaleString() %></td>
-              <td><span class="status-pill"><%= item.status %></span></td>
+              <td data-label="Institution"><%= item.institution_name %></td>
+              <td data-label="Reason"><%= item.reason %></td>
+              <td data-label="Outstanding">KSh <%= Number(item.outstanding_balance).toLocaleString() %></td>
+              <td data-label="Fine">KSh <%= Number(item.fine_amount).toLocaleString() %></td>
+              <td data-label="Reconnection Fee">KSh <%= Number(item.reconnection_fee).toLocaleString() %></td>
+              <td data-label="Status"><span class="status-pill"><%= item.status %></span></td>
             </tr>
           <% }) %>
         </tbody>
@@ -130,7 +130,7 @@
       <p class="empty-state">No infrastructure records found.</p>
     </div>
   <% } else { %>
-    <div class="table-wrap">
+    <div class="table-wrap table-wrap--tall">
       <table class="data-table">
         <thead>
           <tr>
@@ -144,11 +144,11 @@
         <tbody>
           <% infrastructureRecords.forEach((item) => { %>
             <tr>
-              <td><%= item.institution_name %></td>
-              <td><%= item.pcs_purchased %></td>
-              <td><%= item.lan_nodes %></td>
-              <td>KSh <%= Number(item.total_cost).toLocaleString() %></td>
-              <td><span class="status-pill"><%= item.installation_status %></span></td>
+              <td data-label="Institution"><%= item.institution_name %></td>
+              <td data-label="PCs"><%= item.pcs_purchased %></td>
+              <td data-label="LAN Nodes"><%= item.lan_nodes %></td>
+              <td data-label="Total Cost">KSh <%= Number(item.total_cost).toLocaleString() %></td>
+              <td data-label="Status"><span class="status-pill"><%= item.installation_status %></span></td>
             </tr>
           <% }) %>
         </tbody>
@@ -173,7 +173,7 @@
       <p class="empty-state">No upgrade records found.</p>
     </div>
   <% } else { %>
-    <div class="table-wrap">
+    <div class="table-wrap table-wrap--tall">
       <table class="data-table">
         <thead>
           <tr>
@@ -187,11 +187,11 @@
         <tbody>
           <% upgradeHistory.forEach((item) => { %>
             <tr>
-              <td><%= item.institution_name %></td>
-              <td><%= item.old_speed_label %></td>
-              <td><%= item.new_speed_label %></td>
-              <td>KSh <%= Number(item.discounted_monthly_cost).toLocaleString() %></td>
-              <td><%= new Date(item.upgrade_date).toISOString().slice(0, 10) %></td>
+              <td data-label="Institution"><%= item.institution_name %></td>
+              <td data-label="Old Package"><%= item.old_speed_label %></td>
+              <td data-label="New Package"><%= item.new_speed_label %></td>
+              <td data-label="Discounted Cost">KSh <%= Number(item.discounted_monthly_cost).toLocaleString() %></td>
+              <td data-label="Date"><%= new Date(item.upgrade_date).toISOString().slice(0, 10) %></td>
             </tr>
           <% }) %>
         </tbody>

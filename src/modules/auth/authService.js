@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-
+const authRepository = require('./authRepository');
 const AppError = require('../../shared/errors/AppError');
 
 const HASH_KEY_LENGTH = 64;
@@ -58,8 +58,54 @@ async function authenticate(credentials, repository) {
   };
 }
 
+async function changePassword({ userId, currentPassword, newPassword }, repository) {
+    const user = await repository.findById(userId);
+    if (!user) {
+        throw new AppError('User not found.', 404);
+    }
+
+    const passwordValid = await verifyPassword(currentPassword, user.password_hash);
+    if (!passwordValid) {
+        throw new AppError('Invalid current password.', 401);
+    }
+
+    if (!newPassword || newPassword.length < 8) {
+        throw new AppError('New password must be at least 8 characters.', 400);
+    }
+
+    const newPasswordHash = await hashPassword(newPassword);
+    await repository.updatePassword(userId, newPasswordHash);
+}
+
+async function changeUsername({ userId, currentPassword, newUsername }, repository) {
+    const user = await repository.findById(userId);
+    if (!user) {
+        throw new AppError('User not found.', 404);
+    }
+
+    const passwordValid = await verifyPassword(currentPassword, user.password_hash);
+    if (!passwordValid) {
+        throw new AppError('Invalid current password.', 401);
+    }
+
+    const trimmed = newUsername.trim();
+    if (!/^[a-zA-Z0-9_]{3,50}$/.test(trimmed)) {
+        throw new AppError('Username must be 3–50 characters and contain only letters, numbers, and underscores.', 400);
+    }
+
+    const conflict = await repository.findByUsernameExcluding(trimmed, userId);
+    if (conflict) {
+        throw new AppError('That username is already taken. Please choose another.', 409);
+    }
+
+    await repository.updateUsername(userId, trimmed);
+    return { newUsername: trimmed };
+}
+
 module.exports = {
   hashPassword,
   verifyPassword,
   authenticate,
+  changePassword,
+  changeUsername,
 };

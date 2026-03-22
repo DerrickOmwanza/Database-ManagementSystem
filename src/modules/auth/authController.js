@@ -56,9 +56,56 @@ const me = asyncHandler(async (req, res) => {
   });
 });
 
+const changePassword = asyncHandler(async (req, res) => {
+  const { currentPassword, newPassword, confirmPassword } = req.body;
+  const { user } = req.session;
+
+  if (newPassword !== confirmPassword) {
+    req.flash('error', 'New passwords do not match.');
+    return res.redirect('/auth/me');
+  }
+
+  try {
+    await authService.changePassword({
+      userId: user.id,
+      currentPassword,
+      newPassword,
+    }, authRepository);
+
+    req.flash('success', 'Your password has been changed successfully.');
+  } catch (error) {
+    req.flash('error', error.message || 'An error occurred while changing your password.');
+  }
+
+  return res.redirect('/auth/me');
+});
+
+const changeUsername = asyncHandler(async (req, res) => {
+  const { currentPassword, newUsername } = req.body;
+  const { user } = req.session;
+
+  try {
+    const result = await authService.changeUsername({
+      userId: user.id,
+      currentPassword,
+      newUsername,
+    }, authRepository);
+
+    // Update the session so the topbar reflects the new username immediately
+    req.session.user = { ...user, username: result.newUsername };
+    req.flash('success', `Username changed to "${result.newUsername}" successfully.`);
+  } catch (error) {
+    req.flash('error', error.message || 'An error occurred while changing your username.');
+  }
+
+  return res.redirect('/auth/me');
+});
+
 module.exports = {
   showLogin,
   login,
   logout,
   me,
+  changePassword,
+  changeUsername,
 };

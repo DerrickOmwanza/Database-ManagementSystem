@@ -31,14 +31,14 @@
         <tbody>
           <% institutions.forEach((institution) => { %>
             <tr>
-              <td><%= institution.name %></td>
-              <td><%= institution.institution_type %></td>
-              <td><%= institution.town %></td>
-              <td><%= institution.county %></td>
-              <td><%= institution.contact_name || '-' %></td>
-              <td><%= institution.contact_phone || '-' %></td>
-              <td><%= institution.speed_label %></td>
-              <td><span class="status-pill"><%= institution.status %></span></td>
+              <td data-label="Name"><%= institution.name %></td>
+              <td data-label="Type"><%= institution.institution_type %></td>
+              <td data-label="Town"><%= institution.town %></td>
+              <td data-label="County"><%= institution.county %></td>
+              <td data-label="Contact"><%= institution.contact_name || '-' %></td>
+              <td data-label="Phone"><%= institution.contact_phone || '-' %></td>
+              <td data-label="Bandwidth"><%= institution.speed_label %></td>
+              <td data-label="Status"><span class="status-pill"><%= institution.status %></span></td>
             </tr>
           <% }); %>
         </tbody>

@@ -68,13 +68,13 @@
           <tbody>
             <% upgrades.forEach((upgrade) => { %>
               <tr>
-                <td><%= upgrade.institution_name %></td>
-                <td><%= upgrade.old_speed_label %></td>
-                <td><%= upgrade.new_speed_label %></td>
-                <td>KSh <%= Number(upgrade.old_monthly_cost).toLocaleString() %></td>
-                <td>KSh <%= Number(upgrade.new_monthly_cost).toLocaleString() %></td>
-                <td>KSh <%= Number(upgrade.discounted_monthly_cost).toLocaleString() %></td>
-                <td><%= new Date(upgrade.upgrade_date).toISOString().slice(0, 10) %></td>
+                <td data-label="Institution"><%= upgrade.institution_name %></td>
+                <td data-label="Old Package"><%= upgrade.old_speed_label %></td>
+                <td data-label="New Package"><%= upgrade.new_speed_label %></td>
+                <td data-label="Old Cost">KSh <%= Number(upgrade.old_monthly_cost).toLocaleString() %></td>
+                <td data-label="New Cost">KSh <%= Number(upgrade.new_monthly_cost).toLocaleString() %></td>
+                <td data-label="Discounted">KSh <%= Number(upgrade.discounted_monthly_cost).toLocaleString() %></td>
+                <td data-label="Date"><%= new Date(upgrade.upgrade_date).toISOString().slice(0, 10) %></td>
               </tr>
             <% }) %>
           </tbody>

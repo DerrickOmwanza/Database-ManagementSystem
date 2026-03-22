@@ -36,6 +36,12 @@
       <strong>Navigation</strong>
       <button type="button" class="sidebar-close" data-nav-close aria-label="Close navigation menu">Close</button>
     </div>
+    <% if (currentUser) { %>
+      <div class="sidebar-user">
+        <span class="sidebar-user-name"><%= currentUser.fullName %></span>
+        <span class="sidebar-user-role"><%= currentUser.role %></span>
+      </div>
+    <% } %>
     <nav class="sidebar-nav" aria-label="Primary">
       <a class="sidebar-link <%= currentPath === '/' ? 'is-active' : '' %>" href="/">Dashboard</a>
       <a class="sidebar-link <%= currentPath.startsWith('/institutions') ? 'is-active' : '' %>" href="/institutions">Registration</a>

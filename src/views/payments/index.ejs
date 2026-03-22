@@ -142,12 +142,12 @@
         <tbody>
           <% payments.forEach((payment) => { %>
             <tr>
-              <td><%= payment.institution_name %></td>
-              <td><%= payment.payment_type %></td>
-              <td>KSh <%= Number(payment.amount).toLocaleString() %></td>
-              <td><span class="status-pill"><%= payment.status %></span></td>
-              <td><%= payment.payment_date ? new Date(payment.payment_date).toISOString().slice(0, 10) : '-' %></td>
-              <td><%= payment.billing_month && payment.billing_year ? `${payment.billing_month}/${payment.billing_year}` : '-' %></td>
+              <td data-label="Institution"><%= payment.institution_name %></td>
+              <td data-label="Type"><%= payment.payment_type %></td>
+              <td data-label="Amount">KSh <%= Number(payment.amount).toLocaleString() %></td>
+              <td data-label="Status"><span class="status-pill"><%= payment.status %></span></td>
+              <td data-label="Payment Date"><%= payment.payment_date ? new Date(payment.payment_date).toISOString().slice(0, 10) : '-' %></td>
+              <td data-label="Billing Period"><%= payment.billing_month && payment.billing_year ? `${payment.billing_month}/${payment.billing_year}` : '-' %></td>
             </tr>
           <% }) %>
         </tbody>

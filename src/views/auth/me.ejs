@@ -1,6 +1,8 @@
 <%- include('../partials/layoutStart', { title, bodyClass: 'app-page', pageHeading, pageDescription, currentPath, currentUser, success, error }) %>
 
 <section class="single-column-grid">
+
+  <%# ── Profile card ── %>
   <article class="panel-card narrow-panel">
     <div class="panel-heading">
       <h2>Current Session</h2>
@@ -16,10 +18,271 @@
       </div>
       <div class="detail-row">
         <dt>Role</dt>
-        <dd><%= user.role %></dd>
+        <dd><span class="status-pill"><%= user.role %></span></dd>
       </div>
     </dl>
   </article>
+
+  <%# ── Change Username ── %>
+  <article class="panel-card narrow-panel">
+    <div class="panel-heading">
+      <h2>Change Username</h2>
+      <p class="panel-caption">Choose a unique username. You will need to use the new username on your next login.</p>
+    </div>
+    <form action="/auth/me/username" method="POST" class="account-form" id="usernameForm" novalidate>
+      <div class="account-form-grid">
+
+        <div class="form-field">
+          <label class="form-label" for="currentPasswordForUsername">
+            Current Password <span class="required-mark">*</span>
+          </label>
+          <input
+            type="password"
+            id="currentPasswordForUsername"
+            name="currentPassword"
+            class="form-input"
+            autocomplete="current-password"
+            required
+            placeholder="Enter your current password to confirm"
+          >
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="newUsername">
+            New Username <span class="required-mark">*</span>
+          </label>
+          <input
+            type="text"
+            id="newUsername"
+            name="newUsername"
+            class="form-input"
+            autocomplete="username"
+            required
+            minlength="3"
+            maxlength="50"
+            pattern="[a-zA-Z0-9_]+"
+            placeholder="Letters, numbers and underscores only"
+          >
+          <span class="field-hint">3–50 characters. Letters, numbers, and underscores only.</span>
+        </div>
+
+      </div>
+      <div class="account-form-actions">
+        <button type="submit" class="btn btn-primary">Update Username</button>
+      </div>
+    </form>
+  </article>
+
+  <%# ── Change Password ── %>
+  <article class="panel-card narrow-panel">
+    <div class="panel-heading">
+      <h2>Change Password</h2>
+      <p class="panel-caption">Use a strong password that is at least 8 characters and not easy to guess.</p>
+    </div>
+    <form action="/auth/me/password" method="POST" class="account-form" id="passwordForm" novalidate>
+      <div class="account-form-grid">
+
+        <div class="form-field">
+          <label class="form-label" for="currentPassword">
+            Current Password <span class="required-mark">*</span>
+          </label>
+          <div class="input-reveal-wrap">
+            <input
+              type="password"
+              id="currentPassword"
+              name="currentPassword"
+              class="form-input"
+              autocomplete="current-password"
+              required
+              placeholder="Enter your current password"
+            >
+            <button type="button" class="reveal-btn" data-reveal="currentPassword" aria-label="Show/hide password">Show</button>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="newPassword">
+            New Password <span class="required-mark">*</span>
+          </label>
+          <div class="input-reveal-wrap">
+            <input
+              type="password"
+              id="newPassword"
+              name="newPassword"
+              class="form-input"
+              autocomplete="new-password"
+              required
+              minlength="8"
+              placeholder="Minimum 8 characters"
+            >
+            <button type="button" class="reveal-btn" data-reveal="newPassword" aria-label="Show/hide password">Show</button>
+          </div>
+          <div class="password-strength" id="strengthBar" aria-live="polite"></div>
+          <span class="field-hint">Must be at least 8 characters. Avoid common words or default passwords.</span>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="confirmPassword">
+            Confirm New Password <span class="required-mark">*</span>
+          </label>
+          <div class="input-reveal-wrap">
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              class="form-input"
+              autocomplete="new-password"
+              required
+              placeholder="Re-enter your new password"
+            >
+            <button type="button" class="reveal-btn" data-reveal="confirmPassword" aria-label="Show/hide password">Show</button>
+          </div>
+          <span class="field-hint match-hint" id="matchHint"></span>
+        </div>
+
+      </div>
+      <div class="account-form-actions">
+        <button type="submit" class="btn btn-primary" id="savePasswordBtn">Save New Password</button>
+      </div>
+    </form>
+  </article>
+
 </section>
+
+<style>
+.account-form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 13px;
+}
+.field-hint {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.match-hint {
+  font-weight: 500;
+}
+.input-reveal-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.input-reveal-wrap .form-input {
+  flex: 1;
+  padding-right: 64px;
+}
+.reveal-btn {
+  position: absolute;
+  right: 10px;
+  border: none;
+  background: none;
+  color: var(--info);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+.password-strength {
+  height: 4px;
+  border-radius: 999px;
+  margin-top: 6px;
+  background: var(--line);
+  overflow: hidden;
+  transition: background 0.3s;
+}
+.password-strength::after {
+  content: '';
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.3s, background 0.3s;
+  width: var(--strength-width, 0%);
+  background: var(--strength-color, transparent);
+}
+.account-form-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+}
+</style>
+
+<script>
+(function () {
+  // Show/hide toggles
+  document.querySelectorAll('.reveal-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var input = document.getElementById(btn.dataset.reveal);
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = 'Hide';
+      } else {
+        input.type = 'password';
+        btn.textContent = 'Show';
+      }
+    });
+  });
+
+  // Password strength meter
+  var newPwInput = document.getElementById('newPassword');
+  var strengthBar = document.getElementById('strengthBar');
+  var confirmInput = document.getElementById('confirmPassword');
+  var matchHint = document.getElementById('matchHint');
+  var saveBtn = document.getElementById('savePasswordBtn');
+
+  function scorePassword(pw) {
+    var score = 0;
+    if (pw.length >= 8) score++;
+    if (pw.length >= 12) score++;
+    if (/[A-Z]/.test(pw)) score++;
+    if (/[0-9]/.test(pw)) score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+    return score;
+  }
+
+  newPwInput.addEventListener('input', function () {
+    var score = scorePassword(newPwInput.value);
+    var widths  = ['0%', '20%', '40%', '65%', '85%', '100%'];
+    var colors  = ['transparent', '#dc3545', '#ff8c1a', '#ffc107', '#28a745', '#14532d'];
+    strengthBar.style.setProperty('--strength-width', widths[score]);
+    strengthBar.style.setProperty('--strength-color', colors[score]);
+    checkMatch();
+  });
+
+  function checkMatch() {
+    if (!confirmInput.value) { matchHint.textContent = ''; return; }
+    if (newPwInput.value === confirmInput.value) {
+      matchHint.textContent = '✓ Passwords match';
+      matchHint.style.color = 'var(--success)';
+      saveBtn.disabled = false;
+    } else {
+      matchHint.textContent = '✗ Passwords do not match';
+      matchHint.style.color = 'var(--danger)';
+      saveBtn.disabled = true;
+    }
+  }
+
+  confirmInput.addEventListener('input', checkMatch);
+
+  // Prevent submit if passwords don't match
+  document.getElementById('passwordForm').addEventListener('submit', function (e) {
+    if (newPwInput.value !== confirmInput.value) {
+      e.preventDefault();
+      matchHint.textContent = '✗ Passwords do not match';
+      matchHint.style.color = 'var(--danger)';
+    }
+  });
+}());
+</script>
 
 <%- include('../partials/layoutEnd') %>

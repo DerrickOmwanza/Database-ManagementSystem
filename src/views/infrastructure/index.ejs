@@ -48,7 +48,7 @@
     <div class="panel-heading">
       <h2>LAN Pricing Tiers</h2>
     </div>
-    <div class="table-wrap">
+    <div class="table-wrap table-wrap--auto">
       <table class="data-table">
         <thead>
           <tr>
@@ -59,8 +59,8 @@
         <tbody>
           <% lanPricingTiers.forEach((tier) => { %>
             <tr>
-              <td><%= tier.min_nodes %> - <%= tier.max_nodes %></td>
-              <td>KSh <%= Number(tier.cost).toLocaleString() %></td>
+              <td data-label="Nodes"><%= tier.min_nodes %> - <%= tier.max_nodes %></td>
+              <td data-label="Cost">KSh <%= Number(tier.cost).toLocaleString() %></td>
             </tr>
           <% }) %>
         </tbody>
@@ -98,14 +98,14 @@
         <tbody>
           <% records.forEach((record) => { %>
             <tr>
-              <td><%= record.institution_name %></td>
-              <td><%= record.pcs_purchased %></td>
-              <td>KSh <%= Number(record.pcs_cost).toLocaleString() %></td>
-              <td><%= record.lan_nodes %></td>
-              <td>KSh <%= Number(record.lan_cost).toLocaleString() %></td>
-              <td>KSh <%= Number(record.installation_fee).toLocaleString() %></td>
-              <td>KSh <%= Number(record.total_cost).toLocaleString() %></td>
-              <td><span class="status-pill"><%= record.installation_status %></span></td>
+              <td data-label="Institution"><%= record.institution_name %></td>
+              <td data-label="PCs"><%= record.pcs_purchased %></td>
+              <td data-label="PC Cost">KSh <%= Number(record.pcs_cost).toLocaleString() %></td>
+              <td data-label="LAN Nodes"><%= record.lan_nodes %></td>
+              <td data-label="LAN Cost">KSh <%= Number(record.lan_cost).toLocaleString() %></td>
+              <td data-label="Install Fee">KSh <%= Number(record.installation_fee).toLocaleString() %></td>
+              <td data-label="Total">KSh <%= Number(record.total_cost).toLocaleString() %></td>
+              <td data-label="Status"><span class="status-pill"><%= record.installation_status %></span></td>
             </tr>
           <% }) %>
         </tbody>
