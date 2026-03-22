@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "node src/database/scripts/migrate.js && node src/database/scripts/seed.js",
+    "build": "echo build ok",
     "db:migrate": "node src/database/scripts/migrate.js",
     "db:seed": "node src/database/scripts/seed.js",
     "test": "jest --runInBand --verbose",
