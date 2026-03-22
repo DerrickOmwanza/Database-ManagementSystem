@@ -474,6 +474,11 @@ select.form-input {
   background: none;
 }
 
+/* Small fixed height for short reference tables */
+.table-wrap--sm {
+  max-height: 200px;
+}
+
 .data-table {
   width: 100%;
   border-collapse: collapse;
