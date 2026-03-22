@@ -168,6 +168,25 @@ async function getUpgradeHistory() {
   return rows;
 }
 
+async function getAuditLog() {
+  const [rows] = await db.query(`
+    SELECT
+      al.id,
+      al.action,
+      al.entity,
+      al.entity_id,
+      al.description,
+      al.ip_address,
+      al.created_at,
+      su.username
+    FROM audit_logs al
+    LEFT JOIN system_users su ON su.id = al.user_id
+    ORDER BY al.created_at DESC
+    LIMIT 200
+  `);
+  return rows;
+}
+
 module.exports = {
   getRegisteredInstitutions,
   getDefaulters,
@@ -176,4 +195,5 @@ module.exports = {
   getFinancialSummaryByInstitution,
   getFinancialSummaryByType,
   getUpgradeHistory,
+  getAuditLog,
 };

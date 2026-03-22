@@ -7,6 +7,7 @@ async function getReportsDashboard(repository) {
     financialByInstitution,
     financialByType,
     upgradeHistory,
+    auditLog,
   ] = await Promise.all([
     repository.getRegisteredInstitutions(),
     repository.getDefaulters(),
@@ -15,6 +16,7 @@ async function getReportsDashboard(repository) {
     repository.getFinancialSummaryByInstitution(),
     repository.getFinancialSummaryByType(),
     repository.getUpgradeHistory(),
+    repository.getAuditLog(),
   ]);
 
   const overallFinancialTotals = financialByInstitution.reduce((totals, row) => ({
@@ -42,6 +44,7 @@ async function getReportsDashboard(repository) {
     financialByType,
     overallFinancialTotals,
     upgradeHistory,
+    auditLog,
   };
 }
 

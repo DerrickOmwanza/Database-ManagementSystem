@@ -1,6 +1,7 @@
 const asyncHandler = require('../../shared/utils/asyncHandler');
 const institutionRepository = require('./institutionRepository');
 const institutionService = require('./institutionService');
+const auditLog = require('../../shared/utils/auditLog');
 
 const list = asyncHandler(async (req, res) => {
   const institutions = await institutionService.listInstitutions(institutionRepository);
@@ -30,6 +31,15 @@ const showCreate = asyncHandler(async (req, res) => {
 
 const create = asyncHandler(async (req, res) => {
   const result = await institutionService.registerInstitution(req.body, institutionRepository);
+
+  await auditLog({
+    userId: req.session.user ? req.session.user.id : null,
+    action: 'REGISTER_INSTITUTION',
+    entity: 'institutions',
+    entityId: result.institutionId,
+    description: `Institution "${req.body.name}" registered. Registration fee: KSh ${result.registrationFee}.`,
+    ipAddress: req.ip,
+  });
 
   if (req.accepts('json') && !req.accepts('html')) {
     return res.status(201).json({

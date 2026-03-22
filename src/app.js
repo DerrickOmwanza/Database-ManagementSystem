@@ -24,6 +24,13 @@ app.use(session({
   secret: env.sessionSecret,
   resave: false,
   saveUninitialized: false,
+  rolling: true,                      // reset expiry on every request
+  cookie: {
+    maxAge: 30 * 60 * 1000,           // 30-minute inactivity timeout
+    httpOnly: true,                   // not accessible via JS
+    sameSite: 'lax',
+    secure: env.nodeEnv === 'production',
+  },
 }));
 app.use(flash());
 

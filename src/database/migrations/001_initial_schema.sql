@@ -162,3 +162,21 @@ CREATE INDEX idx_payments_institution_date ON payments (institution_id, payment_
 CREATE INDEX idx_payments_status ON payments (status);
 CREATE INDEX idx_fines_status ON fines (status);
 CREATE INDEX idx_disconnections_status ON disconnections (status);
+
+CREATE TABLE IF NOT EXISTS audit_logs (
+  id          INT PRIMARY KEY AUTO_INCREMENT,
+  user_id     INT NULL,
+  action      VARCHAR(60)  NOT NULL,
+  entity      VARCHAR(60)  NOT NULL,
+  entity_id   INT NULL,
+  description TEXT         NOT NULL,
+  ip_address  VARCHAR(45)  NULL,
+  created_at  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_audit_logs_user
+    FOREIGN KEY (user_id) REFERENCES system_users(id)
+    ON UPDATE CASCADE ON DELETE SET NULL
+);
+
+CREATE INDEX idx_audit_logs_user   ON audit_logs (user_id);
+CREATE INDEX idx_audit_logs_action ON audit_logs (action);
+CREATE INDEX idx_audit_logs_entity ON audit_logs (entity, entity_id);

@@ -48,7 +48,9 @@
       <a class="sidebar-link <%= currentPath.startsWith('/payments') ? 'is-active' : '' %>" href="/payments">Payments</a>
       <a class="sidebar-link <%= currentPath.startsWith('/infrastructure') ? 'is-active' : '' %>" href="/infrastructure">Infrastructure</a>
       <a class="sidebar-link <%= currentPath.startsWith('/upgrades') ? 'is-active' : '' %>" href="/upgrades">Services</a>
-      <a class="sidebar-link <%= currentPath.startsWith('/reports') ? 'is-active' : '' %>" href="/reports">Reports</a>
+      <% if (currentUser && currentUser.role === 'Admin') { %>
+        <a class="sidebar-link <%= currentPath.startsWith('/reports') ? 'is-active' : '' %>" href="/reports">Reports</a>
+      <% } %>
       <a class="sidebar-link <%= currentPath.startsWith('/auth/me') ? 'is-active' : '' %>" href="/auth/me">My Account</a>
     </nav>
   </aside>

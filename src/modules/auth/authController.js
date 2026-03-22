@@ -1,6 +1,7 @@
 const asyncHandler = require('../../shared/utils/asyncHandler');
 const authRepository = require('./authRepository');
 const authService = require('./authService');
+const auditLog = require('../../shared/utils/auditLog');
 const { validateLogin } = require('./authValidators');
 
 const showLogin = asyncHandler(async (req, res) => {
@@ -19,11 +20,17 @@ const login = asyncHandler(async (req, res) => {
   const user = await authService.authenticate(req.body, authRepository);
   req.session.user = user;
 
+  await auditLog({
+    userId: user.id,
+    action: 'LOGIN',
+    entity: 'system_users',
+    entityId: user.id,
+    description: `User "${user.username}" logged in.`,
+    ipAddress: req.ip,
+  });
+
   if (req.accepts('json') && !req.accepts('html')) {
-    return res.status(200).json({
-      message: 'Login successful',
-      user,
-    });
+    return res.status(200).json({ message: 'Login successful', user });
   }
 
   req.flash('success', `Welcome back, ${user.fullName}`);
@@ -31,12 +38,22 @@ const login = asyncHandler(async (req, res) => {
 });
 
 const logout = asyncHandler(async (req, res) => {
+  const user = req.session.user;
+
+  await auditLog({
+    userId: user ? user.id : null,
+    action: 'LOGOUT',
+    entity: 'system_users',
+    entityId: user ? user.id : null,
+    description: user ? `User "${user.username}" logged out.` : 'Anonymous logout.',
+    ipAddress: req.ip,
+  });
+
   req.session.destroy(() => {
     if (req.accepts('json') && !req.accepts('html')) {
       res.status(200).json({ message: 'Logout successful' });
       return;
     }
-
     res.redirect('/auth/login');
   });
 });

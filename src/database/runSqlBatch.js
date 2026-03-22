@@ -22,7 +22,16 @@ async function executeSqlFile(connection, filePath) {
   const statements = splitSqlStatements(sql);
 
   for (const statement of statements) {
-    await connection.query(statement);
+    try {
+      await connection.query(statement);
+    } catch (err) {
+      // 1061 = duplicate key name (index already exists)
+      // 1050 = table already exists (belt-and-suspenders alongside IF NOT EXISTS)
+      if (err.errno === 1061 || err.errno === 1050) {
+        continue;
+      }
+      throw err;
+    }
   }
 }
 

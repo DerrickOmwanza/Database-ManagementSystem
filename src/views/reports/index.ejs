@@ -10,6 +10,7 @@
         <option value="disconnections">Disconnections</option>
         <option value="infrastructure">Infrastructure</option>
         <option value="upgrades">Upgrade History</option>
+        <option value="audit">Audit Log</option>
       </select>
       <button type="button" class="btn btn-outline" data-print-page>Print Current View</button>
     </div>
@@ -192,6 +193,40 @@
               <td data-label="New Package"><%= item.new_speed_label %></td>
               <td data-label="Discounted Cost">KSh <%= Number(item.discounted_monthly_cost).toLocaleString() %></td>
               <td data-label="Date"><%= new Date(item.upgrade_date).toISOString().slice(0, 10) %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>
+
+<section class="panel-card" data-report-section="audit">
+  <div class="panel-heading"><h2>Audit Log</h2></div>
+  <% if (!auditLog.length) { %>
+    <div class="empty-box">
+      <p class="empty-state">No audit log entries found.</p>
+    </div>
+  <% } else { %>
+    <div class="table-wrap table-wrap--tall">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date / Time</th>
+            <th>User</th>
+            <th>Action</th>
+            <th>Description</th>
+            <th>IP Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% auditLog.forEach((entry) => { %>
+            <tr>
+              <td data-label="Date / Time"><%= new Date(entry.created_at).toISOString().replace('T',' ').slice(0,19) %></td>
+              <td data-label="User"><%= entry.username || '-' %></td>
+              <td data-label="Action"><span class="status-pill"><%= entry.action %></span></td>
+              <td data-label="Description"><%= entry.description %></td>
+              <td data-label="IP Address"><%= entry.ip_address || '-' %></td>
             </tr>
           <% }) %>
         </tbody>
