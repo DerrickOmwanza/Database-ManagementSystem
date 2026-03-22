@@ -7,18 +7,34 @@ const { executeSqlFile } = require('../runSqlBatch');
 const authService = require('../../modules/auth/authService');
 
 async function seedAdminUser(connection) {
-  const passwordHash = await authService.hashPassword('admin123');
+  console.log('seedAdminUser: starting admin user seed');
 
-  await connection.query(
-    `INSERT INTO system_users (username, password_hash, full_name, role, status)
-     VALUES (?, ?, ?, 'Admin', 'Active')
-     ON DUPLICATE KEY UPDATE
-       full_name = VALUES(full_name),
-       role = VALUES(role),
-       status = VALUES(status),
-       updated_at = CURRENT_TIMESTAMP`,
-    ['admin', passwordHash, 'System Administrator']
-  );
+  let passwordHash;
+  try {
+    passwordHash = await authService.hashPassword('admin123');
+    console.log('seedAdminUser: password hashed successfully, hash prefix:', passwordHash.substring(0, 10) + '...');
+  } catch (hashError) {
+    console.error('seedAdminUser: failed to hash password:', hashError);
+    throw hashError;
+  }
+
+  try {
+    const [result] = await connection.query(
+      `INSERT INTO system_users (username, password_hash, full_name, role, status)
+       VALUES (?, ?, ?, 'Admin', 'Active')
+       ON DUPLICATE KEY UPDATE
+         password_hash = VALUES(password_hash),
+         full_name = VALUES(full_name),
+         role = VALUES(role),
+         status = VALUES(status),
+         updated_at = CURRENT_TIMESTAMP`,
+      ['admin', passwordHash, 'System Administrator']
+    );
+    console.log('seedAdminUser: INSERT query succeeded, affectedRows:', result.affectedRows);
+  } catch (queryError) {
+    console.error('seedAdminUser: INSERT query failed:', queryError);
+    throw queryError;
+  }
 }
 
 async function main() {
@@ -38,8 +54,13 @@ async function main() {
     console.log(`Applied seed: ${file}`);
   }
 
-  await seedAdminUser(connection);
-  console.log('Applied seed: admin user');
+  try {
+    await seedAdminUser(connection);
+    console.log('Applied seed: admin user');
+  } catch (error) {
+    console.error('main: seedAdminUser failed:', error);
+    throw error;
+  }
 
   await connection.end();
 }
