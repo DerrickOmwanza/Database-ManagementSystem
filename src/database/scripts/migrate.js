@@ -6,17 +6,21 @@ const env = require('../../config/env');
 const { executeSqlFile } = require('../runSqlBatch');
 
 async function main() {
-  const rootConnection = await mysql.createConnection({
-    host: env.db.host,
-    user: env.db.user,
-    password: env.db.password,
-    port: env.db.port,
-  });
+  // When MYSQL_URL is set (Railway), the DB is pre-created — skip CREATE DATABASE
+  const useUrl = !!(process.env.MYSQL_URL || process.env.DATABASE_URL);
 
-  await rootConnection.query(
-    `CREATE DATABASE IF NOT EXISTS \`${env.db.database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`
-  );
-  await rootConnection.end();
+  if (!useUrl) {
+    const rootConnection = await mysql.createConnection({
+      host: env.db.host,
+      user: env.db.user,
+      password: env.db.password,
+      port: env.db.port,
+    });
+    await rootConnection.query(
+      `CREATE DATABASE IF NOT EXISTS \`${env.db.database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`
+    );
+    await rootConnection.end();
+  }
 
   const connection = await mysql.createConnection({
     host: env.db.host,

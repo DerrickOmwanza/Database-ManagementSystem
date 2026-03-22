@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "Azani Internet Service Provider Information System - Database Management System for managing institution registration, payments, infrastructure, upgrades, and reporting.",
   "main": "server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
+    "build": "node src/database/scripts/migrate.js && node src/database/scripts/seed.js",
     "db:migrate": "node src/database/scripts/migrate.js",
     "db:seed": "node src/database/scripts/seed.js",
     "test": "jest --runInBand --verbose",
